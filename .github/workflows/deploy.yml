@@ -108,7 +108,7 @@ jobs:
         tar -czf context.tar.gz -C cloudbuild_context .
         gcloud builds submit context.tar.gz --project=${{ vars.PROJECT_ID }} \
           --substitutions=_CONT_REGISTRY_NAME=${{ vars.CONT_REGISTRY_NAME }},_PROJECT_ID=${{ vars.PROJECT_ID }},_CONT_REPOSITORY_NAME=${{ vars.CONT_REPOSITORY_NAME }},_CONT_IMAGE_NAME=${{ vars.CONT_IMAGE_NAME }},_SERVICE_ACCOUNT=${{ vars.SERVICE_ACCOUNT }},_REGION=${{ vars.REGION }} \
-          --config=cloudbuild.yaml --service-account=${{ vars.SERVICE_ACCOUNT }}
+          --config=cloudbuild.yaml --service-account=projects/${{ vars.PROJECT_ID }}/serviceAccounts/${{ vars.SERVICE_ACCOUNT }}
           
     - name: Create Migration Job
       run: |

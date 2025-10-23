@@ -61,14 +61,14 @@ steps:
   args: [
     'build', 
     '-t',
-    '${_CONT_REGISTRY_NAME}/${_PROJECT_ID}/${_CONT_REPOSITORY_NAME}/${_CONT_IMAGE_NAME}:latest',
+    '${_CONT_REGISTRY_NAME}/${_CONT_REPOSITORY_NAME}/${_CONT_IMAGE_NAME}:latest',
     '--cache-from',
-    '${_CONT_REGISTRY_NAME}/${_PROJECT_ID}/${_CONT_REPOSITORY_NAME}/${_CONT_IMAGE_NAME}:latest',
+    '${_CONT_REGISTRY_NAME}/${_CONT_REPOSITORY_NAME}/${_CONT_IMAGE_NAME}:latest',
     '.'
   ]
 
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', '${_CONT_REGISTRY_NAME}/${_PROJECT_ID}/${_CONT_REPOSITORY_NAME}/${_CONT_IMAGE_NAME}:latest']
+  args: ['push', '${_CONT_REGISTRY_NAME}/${_CONT_REPOSITORY_NAME}/${_CONT_IMAGE_NAME}:latest']
 
 
 - name: 'gcr.io/cloud-builders/gcloud'
@@ -76,13 +76,13 @@ steps:
     'run', 
     'deploy', 
     '${_CONT_IMAGE_NAME}',
-    '--image', '${_CONT_REGISTRY_NAME}/${_PROJECT_ID}/${_CONT_REPOSITORY_NAME}/${_CONT_IMAGE_NAME}:latest',
+    '--image', '${_CONT_REGISTRY_NAME}/${_CONT_REPOSITORY_NAME}/${_CONT_IMAGE_NAME}:latest',
     '--service-account', '${_SERVICE_ACCOUNT}',
     '--project', '${_PROJECT_ID}',
     '--region', '${_REGION}',
     '--allow-unauthenticated'
   ]
 
-images: ['${_CONT_REGISTRY_NAME}/${_PROJECT_ID}/${_CONT_REPOSITORY_NAME}/${_CONT_IMAGE_NAME}:latest']
+images: ['${_CONT_REGISTRY_NAME}/${_CONT_REPOSITORY_NAME}/${_CONT_IMAGE_NAME}:latest']
 options:
   logging: CLOUD_LOGGING_ONLY

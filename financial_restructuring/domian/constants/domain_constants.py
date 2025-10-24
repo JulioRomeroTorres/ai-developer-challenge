@@ -21,3 +21,5 @@ BANK_OFFER = [
 
 class OpenAiModels(str, Enum):
   GPT_MINI = "gpt-4o-mini"
+
+DEFAULT_EXPIRATION_TIME = 1000

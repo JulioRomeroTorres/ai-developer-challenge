@@ -1,47 +1,99 @@
 # graph_definition.py
 from langgraph.graph import StateGraph, END
 from langchain_openai import ChatOpenAI
-
 from financial_restructuring.domian.constants.domain_constants import OpenAiModels
-from langchain_google_genai import ChatGoogleGenerativeAI
+from typing import TypedDict, Any
 
-from financial_restructuring.domian.constants.env_constants import GEMINI_API_KEY
-
-from typing import TypedDict
+from .agents import router_agent, optimizer_agent, welcome_agent, fallback_agent, humanizer_agent, extracter_agent
+from .tools import generate_optimized_plan, get_user_information
+from .prompts import ROUTER_SYSTEM_INST, WELCOME_SYSTEM_INST, FALLBACK_SYSTEM_INST, HUMANIZER_SYST_INST, EXTRACTER_SYSTEM_INST
 
 class State(TypedDict):
     user_input: str
     llm_input: str
     llm_output: str
+    user_id: str
+    tool_1_output: Any
+    tool_2_output: Any
+    route: str
 
 llm = ChatOpenAI(model=OpenAiModels.GPT_MINI.value, temperature=0)
 
-llm = ChatGoogleGenerativeAI(
-    model="gemini-2.0-flash",
-    google_api_key=GEMINI_API_KEY,
-    temperature=0
+graph = StateGraph(State)
+
+def router_node(state: State):
+    messages = [
+        {"role": "system", "content": ROUTER_SYSTEM_INST},
+        {"role": "user", "content": state["user_input"]}
+    ]
+    state["route"] = router_agent.invoke(messages).content
+    print(f"Selected route", state["route"])
+    return state
+
+def optimizer_plan_node(state: State):
+
+    messages = [
+        {"role": "system", "content": EXTRACTER_SYSTEM_INST},
+        {"role": "user", "content": state["user_input"]}
+    ]
+
+    state["user_id"] = extracter_agent.invoke(messages).content
+    print("User id => ", state["user_id"])
+    state["tool_1_output"] = get_user_information(state["user_id"])
+    state["tool_2_output"] = generate_optimized_plan(state["tool_1_output"])
+    return state
+
+def welcome_node(state: State):
+    messages = [
+        {"role": "system", "content": WELCOME_SYSTEM_INST},
+        {"role": "user", "content": state["user_input"]}
+    ]
+
+    state["llm_output"] = welcome_agent.invoke(messages).content
+    return state
+
+def fallback_node(state: State):
+
+    messages = [
+        {"role": "system", "content": FALLBACK_SYSTEM_INST},
+        {"role": "user", "content": state["user_input"]}
+    ]
+
+    state["llm_output"] = fallback_agent.invoke(messages).content
+    return state
+
+def humanizer_node(state: State):
+
+    messages = [
+        {"role": "system", "content": HUMANIZER_SYST_INST},
+        {"role": "user", "content": state["tool_2_output"]}
+    ]
+
+    state["llm_output"] = humanizer_agent.invoke(messages).content
+    return state
+
+graph.add_node("router", router_node)
+graph.add_node("optimizer_plan", optimizer_plan_node)
+graph.add_node("welcome", welcome_node)
+graph.add_node("fallback", fallback_node)
+graph.add_node("humanizer", humanizer_node)
+graph.add_node("end", lambda s: s)
+
+graph.set_entry_point("router")
+
+graph.add_conditional_edges(
+    "router",
+    lambda state: state["route"],
+    {
+        "optimizer_plan": "optimizer_plan",
+        "welcome": "welcome",
+        "fallback": "fallback"
+    }
 )
 
-def start_node(state: State):
-    state["llm_input"] = f"Usuario dice: {state.get('user_input')}"
-    return state
-
-def reasoning_node(state: State):
-    response = llm.invoke(f"Responde brevemente a: {state['llm_input']}")
-    state["llm_output"] = response.content
-    return state
-
-def end_node(state: State):
-    return state
-
-graph = StateGraph(State)
-graph.add_node("start", start_node)
-graph.add_node("reasoning", reasoning_node)
-graph.add_node("end", end_node)
-
-graph.set_entry_point("start")
-graph.add_edge("start", "reasoning")
-graph.add_edge("reasoning", "end")
-graph.set_finish_point("end")
+graph.add_edge("optimizer_plan", "humanizer")
+graph.add_edge("humanizer", "end")
+graph.add_edge("welcome", "end")
+graph.add_edge("fallback", "end")
 
 agent_graph = graph.compile()

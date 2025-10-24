@@ -267,3 +267,17 @@ Los siguientes enlaces estarán disponibles durante 1 semana, se ha utilizado de
 
 - **Backend**: https://api-ai-challenge-734156824859.us-east4.run.app
 - **Fronted**: https://ai-challenge-app-734156824859.us-east4.run.app
+
+
+## Informe de los usuarios 
+Si se desea conocer el estado financiero se puede invocar al api que se mencioné lineas arriba, de esa manera se sabrá que información se tiene por usuario
+- CU-001
+ 
+![Resume-01](./assets/images/resume_cu_001.png)
+
+- CU-002
+![Resume-02](./assets/images/resume_cu_002.png)
+
+- CU-003
+
+![Resume-03](./assets/images/resume_cu_003.png)

@@ -25,27 +25,15 @@ class FinancialOptimizer(APIView):
             loans = serializer.validated_data.get('loans')
             cards = serializer.validated_data.get('cards')
             payment_histories = serializer.validated_data.get('payment_histories')
+            credit_score_history = serializer.validated_data.get('credit_score_history')
 
             try:    
-                minimum_payment, optimized_payment, consolidated = FinancialUserService().optimize_financial_plan(
-                    monthly_income_avg, income_variability_pct, essential_expenses_avg, loans, cards, payment_histories )
+                optimiza_value = FinancialUserService().optimize_financial_plan(
+                    monthly_income_avg, income_variability_pct, essential_expenses_avg, loans, cards, payment_histories, credit_score_history )
 
                 response_process = {
                     "customer_id": customer_id,
-                    "financial_plan": {
-                        "minimum": {
-                            "value": minimum_payment,
-                            "thrift": 0.0
-                        },
-                        "optimized": {
-                            "value": optimized_payment,
-                            "thrift": 0.0
-                        },
-                        "consolidated": {
-                            "value": consolidated,
-                            "thrift": 0.0
-                        }
-                    }
+                    **optimiza_value
                 }
                 return Response(
                     response_process,

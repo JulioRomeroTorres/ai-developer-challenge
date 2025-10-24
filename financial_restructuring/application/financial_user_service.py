@@ -4,6 +4,7 @@ from django.forms.models import model_to_dict
 from .constants.app_constants import FINANCIAL_USER_INFORMATION_COLUMNS
 from .agent.work_flow import agent_graph, State
 from .agent.streaming_work_flow import streaming_agent_graph
+from financial_restructuring.domian.repository.financial_optimizer import FinancialOptimizer
 
 class FinancialUserService:
     def get_user_information(self, user_id: str) -> CustomerCashflow:
@@ -14,21 +15,28 @@ class FinancialUserService:
                 'payment_histories', 
                 'loans',
                 'cards'
-            ).get(customer_id='CU-001')
+            ).get(customer_id=user_id)
 
             customer_loans = list(customer.loans.values(*FINANCIAL_USER_INFORMATION_COLUMNS["LOANS"]))
             customer_cards = list(customer.cards.values(*FINANCIAL_USER_INFORMATION_COLUMNS["CARDS"]))
+            customer_credit_score_history = list(customer.credit_score_history.values(*FINANCIAL_USER_INFORMATION_COLUMNS["CREDIT_SCORE"]))
             customer_payment_histories = list(customer.payment_histories.values(*FINANCIAL_USER_INFORMATION_COLUMNS["PAYMENT_HISTORIES"]))
 
-            return {**model_to_dict(customer), "loans": customer_loans, "cards": customer_cards, "payment_histories": customer_payment_histories   }
+            return {**model_to_dict(customer), "loans": customer_loans, "cards": customer_cards, "payment_histories": customer_payment_histories, "credit_score_history": customer_credit_score_history }
         except Exception as error:
             raise error
 
     def optimize_financial_plan(
             self, 
-            monthly_income_avg, income_variability_pct, essential_expenses_avg, loans, cards, payment_histories):
+            monthly_income_avg, income_variability_pct, essential_expenses_avg, loans, cards, payment_histories, credit_score_history):
         
-        return 0.0, 0.0, 0.0
+        return FinancialOptimizer(
+            monthly_income_avg,
+            income_variability_pct,
+            essential_expenses_avg,
+            loans, cards, payment_histories,
+            credit_score_history
+        ).optimize_customer()
 
     def execute_agent(self, question: str):
         print(f"User Question {question}")

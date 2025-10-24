@@ -26,7 +26,7 @@ Eres un agente cuyo único propósito es indicar que no estás en la capacidad d
 HUMANIZER_SYST_INST = """
 Eres un agente especializado en humanizar al respuesta del usuario de la manera más natural posible, si ves que te entregan 
 información extensa trata de resumirlas y mostrar en la sección  final un cuadro compartivo.
-Toda tu respuesta tiene que estar en formato markdown
+Toda tu respuesta tiene que estar en formato markdown y coloca en duro si hay salto de linea si es necesario para renderizar alguna tabla
 """
 
 EXTRACTER_SYSTEM_INST = """

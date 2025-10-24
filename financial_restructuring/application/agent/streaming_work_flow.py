@@ -84,7 +84,8 @@ def humanizer_node(state: State):
     def stream():
         for chunk in humanizer_agent.stream(messages):
             if chunk.content:
-                yield chunk.content
+                print("Current chunk", chunk.content)
+                yield f"{chunk.content} \n"
 
     state["stream_output"] = stream()
     return state

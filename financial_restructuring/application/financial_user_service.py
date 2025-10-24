@@ -42,4 +42,4 @@ class FinancialUserService:
         result = streaming_agent_graph.invoke(state)
 
         for token in result["stream_output"]:
-            yield token
+            yield token + "\n"

@@ -27,4 +27,4 @@ class AgentStreamingOptimizer(APIView):
             except Exception as e:
                 yield f"[Error]: {str(e)}"
 
-        return StreamingHttpResponse(stream(), content_type="text/plain")
+        return StreamingHttpResponse(stream(), content_type="text/event-stream")

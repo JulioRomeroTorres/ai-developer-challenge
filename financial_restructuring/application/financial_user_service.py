@@ -23,8 +23,11 @@ class FinancialUserService:
         except Exception as error:
             raise error
 
-    def optimize_financial_plan(self, question: str):
-        pass
+    def optimize_financial_plan(
+            self, 
+            monthly_income_avg, income_variability_pct, essential_expenses_avg, loans, cards, payment_histories):
+        
+        return 0.0, 0.0, 0.0
 
     def execute_agent(self, question: str):
         print(f"User Question {question}")

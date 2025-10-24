@@ -20,12 +20,8 @@ class AgentOptimizer(APIView):
 
             try:    
                 response = FinancialUserService().execute_agent(question)
-
-                response_process = {
-                    "response": response
-                }
                 return Response(
-                    response_process,
+                    response,
                     status=status.HTTP_200_OK,
                 )
             except Exception as e:

@@ -33,9 +33,18 @@ class FinancialOptimizer(APIView):
                 response_process = {
                     "customer_id": customer_id,
                     "financial_plan": {
-                        "minimum": minimum_payment,
-                        "optimized": optimized_payment,
-                        "consolidated": consolidated
+                        "minimum": {
+                            "value": minimum_payment,
+                            "thrift": 0.0
+                        },
+                        "optimized": {
+                            "value": optimized_payment,
+                            "thrift": 0.0
+                        },
+                        "consolidated": {
+                            "value": consolidated,
+                            "thrift": 0.0
+                        }
                     }
                 }
                 return Response(

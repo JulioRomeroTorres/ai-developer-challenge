@@ -3,7 +3,7 @@ from langgraph.graph import StateGraph, END
 from langchain_openai import ChatOpenAI
 from financial_restructuring.domian.constants.domain_constants import OpenAiModels
 from typing import TypedDict, Any
-
+import json
 from .agents import router_agent, optimizer_agent, welcome_agent, fallback_agent, humanizer_agent, extracter_agent
 from .tools import generate_optimized_plan, get_user_information
 from .prompts import ROUTER_SYSTEM_INST, WELCOME_SYSTEM_INST, FALLBACK_SYSTEM_INST, HUMANIZER_SYST_INST, EXTRACTER_SYSTEM_INST
@@ -41,6 +41,7 @@ def optimizer_plan_node(state: State):
     print("User id => ", state["user_id"])
     state["tool_1_output"] = get_user_information(state["user_id"])
     state["tool_2_output"] = generate_optimized_plan(state["tool_1_output"])
+    print("Tool 1 output", state["tool_2_output"])
     return state
 
 def welcome_node(state: State):
@@ -66,7 +67,7 @@ def humanizer_node(state: State):
 
     messages = [
         {"role": "system", "content": HUMANIZER_SYST_INST},
-        {"role": "user", "content": state["tool_2_output"]}
+        {"role": "user", "content": json.dumps(state["tool_2_output"])}
     ]
 
     state["llm_output"] = humanizer_agent.invoke(messages).content

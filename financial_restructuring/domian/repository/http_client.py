@@ -66,7 +66,6 @@ class HttpClient():
             files=files)
 
         valid_json_response = self.valid_http_response(response)
-        self.logger.log_text(f"valid_json_response {valid_json_response}")
         if model_response is not None:
             return model_response(**valid_json_response)
         return valid_json_response

@@ -26,7 +26,7 @@ def generate_optimized_plan(financial_user_information: JsonResponse) -> JsonRes
     Tool encargada de generar un plan optimizada según la información del usuario
     """
     try:
-        response = HttpClient(BASE_BACKEND_URL).post(f"api/optimizer/", json=financial_user_information)
+        response = HttpClient(BASE_BACKEND_URL).post(f"api/financial-restructuring/optimizer/", json=financial_user_information)
         return response
     except Exception as error:
         return {"error": f"Error al generar el plan óptimo {error}"}    

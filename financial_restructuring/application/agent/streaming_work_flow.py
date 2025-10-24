@@ -5,7 +5,7 @@ from financial_restructuring.domian.constants.domain_constants import OpenAiMode
 from typing import TypedDict, Any
 import json
 from .agents import router_agent, optimizer_agent, welcome_agent, fallback_agent, humanizer_agent, extracter_agent
-from .tools import generate_optimized_plan, get_user_information
+from .tools import generate_optimized_plan, get_user_information, get_users
 from .prompts import ROUTER_SYSTEM_INST, WELCOME_SYSTEM_INST, FALLBACK_SYSTEM_INST, HUMANIZER_SYST_INST, EXTRACTER_SYSTEM_INST
 
 class State(TypedDict):
@@ -90,11 +90,17 @@ def humanizer_node(state: State):
     state["stream_output"] = stream()
     return state
 
+def users_node(state: State):
+    
+    state["tool_2_output"] = get_users()
+    return state
+
 graph.add_node("router", router_node)
 graph.add_node("optimizer_plan", optimizer_plan_node)
 graph.add_node("welcome", welcome_node)
 graph.add_node("fallback", fallback_node)
 graph.add_node("humanizer", humanizer_node)
+graph.add_node("users", users_node)
 graph.add_node("end", lambda s: s)
 
 graph.set_entry_point("router")
@@ -105,11 +111,13 @@ graph.add_conditional_edges(
     {
         "optimizer_plan": "optimizer_plan",
         "welcome": "welcome",
-        "fallback": "fallback"
+        "fallback": "fallback",
+        "users": "users"
     }
 )
 
 graph.add_edge("optimizer_plan", "humanizer")
+graph.add_edge("users", "humanizer")
 graph.add_edge("humanizer", "end")
 graph.add_edge("welcome", "end")
 graph.add_edge("fallback", "end")

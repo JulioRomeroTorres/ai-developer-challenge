@@ -20,6 +20,19 @@ def get_user_information(user_id: str) -> JsonResponse:
     except Exception as error:
         return {"error": f"Error al obtener información del usuarios {error}"}
 
+def get_users() -> JsonResponse:
+    """
+    Tool encargada de la obtención de la información credicticia del usuario
+    """
+    try:
+
+        response = HttpClient(BASE_BACKEND_URL).get(f"api/financial-restructuring/users/")
+        print("Response Get User", response)
+        return response
+    
+    except Exception as error:
+        return {"error": f"Error al obtener información del usuarios {error}"}
+
 #@tool
 def generate_optimized_plan(financial_user_information: JsonResponse) -> JsonResponse:
     """

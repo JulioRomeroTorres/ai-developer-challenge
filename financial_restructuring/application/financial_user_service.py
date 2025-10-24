@@ -25,6 +25,14 @@ class FinancialUserService:
             return {**model_to_dict(customer), "loans": customer_loans, "cards": customer_cards, "payment_histories": customer_payment_histories, "credit_score_history": customer_credit_score_history }
         except Exception as error:
             raise error
+    
+    def get_users(self) -> CustomerCashflow:
+        try:
+            customers = CustomerCashflow.objects.all().values()
+            return customers
+        except Exception as error:
+            raise error
+
 
     def optimize_financial_plan(
             self, 

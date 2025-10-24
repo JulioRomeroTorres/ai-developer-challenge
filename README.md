@@ -42,7 +42,10 @@ Se está considerando el siguiente diagrama agéntico:
 
 ## Diagrama de Arquitectura
 
+Se presenta el diagrama de arquitecuta de la solución así como del pipeline de CI/CD para el despliegue en GCP
 
+
+![architecture](./assets/images/architecture.png)
 
 ## Lista de Endpoints
 

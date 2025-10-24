@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404
 from django.forms.models import model_to_dict
 from .constants.app_constants import FINANCIAL_USER_INFORMATION_COLUMNS
 from .agent.work_flow import agent_graph, State
+from .agent.streaming_work_flow import streaming_agent_graph
 
 class FinancialUserService:
     def get_user_information(self, user_id: str) -> CustomerCashflow:
@@ -34,3 +35,11 @@ class FinancialUserService:
         state = {"user_input": question}
         result = agent_graph.invoke(state)
         return {"response": result["llm_output"]}
+
+    def execute_stream_agent(self, question: str):
+        print(f"User Question {question}")
+        state = {"user_input": question}
+        result = streaming_agent_graph.invoke(state)
+
+        for token in result["stream_output"]:
+            yield token

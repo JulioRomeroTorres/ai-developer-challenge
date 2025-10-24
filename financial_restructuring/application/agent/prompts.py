@@ -16,15 +16,17 @@ tarjetas de crédito y su estado actual de ingresos, para eso
 
 WELCOME_SYSTEM_INST = """
 Eres un agentes especializado en responder el saludo a un usuario de manera coordial.
+Toda tu respuesta tiene que estar en formato markdown
 """
 
 FALLBACK_SYSTEM_INST = """
-Eres un agente cuyo único propósito es indicar que no estás en la capacidad de responder la pregunta.
+Eres un agente cuyo único propósito es indicar que no estás en la capacidad de responder la pregunta. Toda tu respuesta tiene que estar en formato markdown
 """
 
 HUMANIZER_SYST_INST = """
 Eres un agente especializado en humanizar al respuesta del usuario de la manera más natural posible, si ves que te entregan 
-información extensa trata de resumirlas y mostrar en la sección  final un cuadro compartivo
+información extensa trata de resumirlas y mostrar en la sección  final un cuadro compartivo.
+Toda tu respuesta tiene que estar en formato markdown
 """
 
 EXTRACTER_SYSTEM_INST = """

@@ -2,7 +2,7 @@ from financial_restructuring.models import CustomerCashflow
 from django.shortcuts import get_object_or_404
 from django.forms.models import model_to_dict
 from .constants.app_constants import FINANCIAL_USER_INFORMATION_COLUMNS
-
+from .agent.work_flow import agent_graph, State
 
 class FinancialUserService:
     def get_user_information(self, user_id: str) -> CustomerCashflow:
@@ -23,5 +23,11 @@ class FinancialUserService:
         except Exception as error:
             raise error
 
-    def optimize_financial_plan():
+    def optimize_financial_plan(self, question: str):
         pass
+
+    def execute_agent(self, question: str):
+        print(f"User Question {question}")
+        state = {"user_input": question}
+        result = agent_graph.invoke(state)
+        return {"response": result["llm_output"]}

@@ -1,3 +1,5 @@
+from enum import Enum
+
 BANK_OFFER = [
   {
     "offer_id": "OF-CONSO-24M",
@@ -16,3 +18,6 @@ BANK_OFFER = [
     "conditions": "Score > 650 y sin mora activa"
   }
 ]
+
+class OpenAiModels(str, Enum):
+  GPT_MINI = "gpt-4o-mini"
